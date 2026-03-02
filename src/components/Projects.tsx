@@ -1,24 +1,63 @@
 import { motion } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 
+// Hospitality Images
+import hosp1 from "../assets/projects/hospital/Image-empty-state.avif";
+import hosp2 from "../assets/projects/hospital/Image-empty-state (1).avif";
+import hosp3 from "../assets/projects/hospital/Image-empty-state (2).avif";
+import hosp4 from "../assets/projects/hospital/Image-empty-state (3).avif";
+import hosp5 from "../assets/projects/hospital/Image-empty-state (4).avif";
+
+// Residential Images
+import res1 from "../assets/projects/residential/Image-empty-state.avif";
+import res2 from "../assets/projects/residential/Image-empty-state (1).avif";
+import res3 from "../assets/projects/residential/Image-empty-state (2).avif";
+import res4 from "../assets/projects/residential/Image-empty-state (3).avif";
+import res5 from "../assets/projects/residential/Image-empty-state (4).avif";
+
+// Industrial Images
+import ind1 from "../assets/projects/industrial/Image-empty-state.avif";
+import ind2 from "../assets/projects/industrial/Image-empty-state (1).avif";
+import ind3 from "../assets/projects/industrial/Image-empty-state (2).avif";
+import ind4 from "../assets/projects/industrial/Image-empty-state (3).avif";
+import ind5 from "../assets/projects/industrial/Image-empty-state (4).avif";
+
 const categories = [
     {
         id: "hospitality",
         title: "Hospitality",
         description: "creating sophisticated spaces for world-class hospitality brands.",
-        projects: ["1010 Midtown Lobby", "Anjoo Korean BarBQ", "Jinya Ramen Bar", "St. Regis Kitchen", "White Windmill Cafe"]
+        projects: [
+            { name: "1010 Midtown Lobby", image: hosp1 },
+            { name: "Anjoo Korean BarBQ", image: hosp2 },
+            { name: "Jinya Ramen Bar", image: hosp3 },
+            { name: "St. Regis Kitchen", image: hosp4 },
+            { name: "White Windmill Cafe", image: hosp5 }
+        ]
     },
     {
         id: "residential",
         title: "Residential",
         description: "bespoke living environments tailored to the most discerning tastes.",
-        projects: ["Lenox Dr Residence", "Chattahoochee River", "West Paces Ferry", "Mount Paran Residence", "Tuxedo Residence"]
+        projects: [
+            { name: "Lenox Dr Residence", image: res1 },
+            { name: "Chattahoochee River", image: res2 },
+            { name: "West Paces Ferry", image: res3 },
+            { name: "Mount Paran Residence", image: res4 },
+            { name: "Tuxedo Residence", image: res5 }
+        ]
     },
     {
         id: "industrial",
         title: "Industrial",
         description: "efficient and innovative solutions for industrial and corporate facilities.",
-        projects: ["KIA Souvenir Shop", "LS Cable Showroom", "Industrial Facilities", "Corporate Headquarters"]
+        projects: [
+            { name: "KIA Souvenir Shop", image: ind1 },
+            { name: "LS Cable Showroom", image: ind2 },
+            { name: "Hyundai Powertech", image: ind3 },
+            { name: "Sejin America", image: ind4 },
+            { name: "Corporate Headquarters", image: ind5 }
+        ]
     }
 ];
 
@@ -54,14 +93,24 @@ export const Projects = () => {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     transition={{ duration: 0.8, delay: idx * 0.1 }}
                                     viewport={{ once: true }}
-                                    className="group aspect-[4/5] bg-white border border-black/5 p-12 flex flex-col justify-between hover:bg-black hover:text-white transition-all duration-700 cursor-pointer"
+                                    className="group aspect-[4/5] relative bg-white border border-black/5 flex flex-col justify-between hover:bg-black transition-all duration-700 cursor-pointer overflow-hidden"
                                 >
-                                    <span className="text-[10px] font-mono opacity-30 group-hover:opacity-50">0{idx + 1}</span>
-                                    <div>
-                                        <h4 className="text-3xl font-light tracking-tight lowercase mb-4 italic group-hover:not-italic group-hover:font-medium transition-all">
-                                            {project}
-                                        </h4>
-                                        <div className="h-[1px] w-0 bg-white group-hover:w-full transition-all duration-700" />
+                                    {/* Project Image */}
+                                    <motion.img
+                                        src={project.image}
+                                        alt={project.name}
+                                        className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-110 group-hover:opacity-40 transition-all duration-1000"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+
+                                    <div className="relative z-10 p-12 flex flex-col justify-between h-full">
+                                        <span className="text-[10px] font-mono text-black group-hover:text-white opacity-30 group-hover:opacity-50 transition-colors">0{idx + 1}</span>
+                                        <div>
+                                            <h4 className="text-3xl font-light tracking-tight lowercase mb-4 italic group-hover:not-italic group-hover:font-medium text-black group-hover:text-white transition-all">
+                                                {project.name}
+                                            </h4>
+                                            <div className="h-[1px] w-0 bg-white group-hover:w-full transition-all duration-700" />
+                                        </div>
                                     </div>
                                 </motion.div>
                             ))}
@@ -86,11 +135,18 @@ export const Projects = () => {
                                     {cat.projects.slice(3).map((project, idx) => (
                                         <div
                                             key={idx}
-                                            className="flex-shrink-0 w-64 p-8 border border-black/5 hover:border-black/20 transition-all cursor-pointer bg-white/50"
+                                            className="group flex-shrink-0 w-80 relative aspect-video border border-black/5 hover:border-black/20 transition-all cursor-pointer bg-white/50 overflow-hidden"
                                         >
-                                            <p className="text-sm font-light tracking-tight lowercase opacity-60 hover:opacity-100 transition-opacity">
-                                                {project}
-                                            </p>
+                                            <img
+                                                src={project.image}
+                                                alt={project.name}
+                                                className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700"
+                                            />
+                                            <div className="relative z-10 p-6 flex items-end h-full">
+                                                <p className="text-sm font-light tracking-tight lowercase text-black group-hover:text-black transition-opacity">
+                                                    {project.name}
+                                                </p>
+                                            </div>
                                         </div>
                                     ))}
                                 </div>

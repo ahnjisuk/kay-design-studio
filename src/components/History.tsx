@@ -63,7 +63,7 @@ export const History = () => {
                     </h3>
                 </div>
 
-                <div className="relative" ref={containerRef}>
+                <div className="relative min-h-[500px]" ref={containerRef}>
                     {/* Faint Background Line */}
                     <div className="absolute left-[7px] top-0 bottom-0 w-[1px] bg-black/5 md:left-1/2" />
 

@@ -74,11 +74,11 @@ export const Clients = () => {
                                 alt={`${client.name} logo`}
                                 className="w-16 h-16 object-contain opacity-40 group-hover:opacity-100 transition-opacity duration-500 filter brightness-0 invert"
                                 onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
+                                    (e.target as HTMLImageElement).classList.add('hidden');
                                     (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
                                 }}
                             />
-                            <p className="hidden text-[10px] uppercase tracking-architectural text-white/50 group-hover:text-white transition-colors duration-500 text-center">
+                            <p className="hidden text-[10px] uppercase tracking-widest text-white/50 group-hover:text-white transition-all duration-500 text-center font-light">
                                 {client.name}
                             </p>
                         </motion.div>
