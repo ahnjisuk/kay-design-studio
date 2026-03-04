@@ -32,16 +32,14 @@ import ind3 from "../assets/projects/industrial/Image-empty-state (2).avif";
 import ind4 from "../assets/projects/industrial/Image-empty-state (3).avif";
 import ind5 from "../assets/projects/industrial/Image-empty-state (4).avif";
 
-interface Project {
-    id: string;
-    name: string;
-    image: string;
-    category: string;
-    location?: string;
-    year?: string;
-    description?: string;
-    details?: string[];
-}
+const detailImages = import.meta.glob<string>('../assets/projects/hospital/**/*.png', { eager: true, as: 'url' });
+
+const getProjectDetails = (folderName?: string): string[] => {
+    if (!folderName) return [];
+    return Object.entries(detailImages)
+        .filter(([path]) => path.includes(`/hospital/${folderName}/`))
+        .map(([_, url]) => url as string);
+};
 
 const categories: { id: string; title: string; description: string; topImage?: string; projects: Project[] }[] = [
     {
@@ -50,15 +48,15 @@ const categories: { id: string; title: string; description: string; topImage?: s
         description: "EXPERIENCE THE ART OF LUXURY",
         topImage: hospTop,
         projects: [
-            { id: "h1", category: "Hospitality", name: "Jinya Ramen Bar, Alpharetta GA", image: hosp1 },
-            { id: "h2", category: "Hospitality", name: "Park Place Lobby, Atlanta GA", image: hosp2 },
-            { id: "h3", category: "Hospitality", name: "St. Regis Kitchen Communal, Atlanta GA", image: hosp3 },
-            { id: "h4", category: "Hospitality", name: "1010 Midtown Lobby, Atlanta GA", image: hosp4 },
-            { id: "h5", category: "Hospitality", name: "Pit Stop Convenience Store, SugarHill GA", image: hosp5 },
-            { id: "h6", category: "Hospitality", name: "White Windmill Bakery Cafe, Sugarloaf GA", image: hosp6 },
-            { id: "h7", category: "Hospitality", name: "Yuki Restaurant, Duluth GA", image: hosp7 },
-            { id: "h8", category: "Hospitality", name: "Anjoo Korean BarBQ, Suwanee GA", image: hosp8 }
-        ]
+            { id: "h1", category: "Hospitality", name: "Jinya Ramen Bar, Alpharetta GA", image: hosp1, folderName: "Jinya_Ramen_Bar_Alpharetta_GA" },
+            { id: "h2", category: "Hospitality", name: "Park Place Lobby, Atlanta GA", image: hosp2, folderName: "Park_Place_Lobby_Atlanta_GA" },
+            { id: "h3", category: "Hospitality", name: "St. Regis Kitchen Communal, Atlanta GA", image: hosp3, folderName: "St_Regis_Kitchen_Communal_Atlanta_GA" },
+            { id: "h4", category: "Hospitality", name: "1010 Midtown Lobby, Atlanta GA", image: hosp4, folderName: "1010_Midtown_Lobby_Atlanta_Georgia" },
+            { id: "h5", category: "Hospitality", name: "Pit Stop Convenience Store, SugarHill GA", image: hosp5, folderName: "Pit_Stop_Convenience_Store_SugarHill_GA" },
+            { id: "h6", category: "Hospitality", name: "White Windmill Bakery Cafe, Sugarloaf GA", image: hosp6, folderName: "White_Windmill_Bakery_Cafe_Sugarloaf_GA" },
+            { id: "h7", category: "Hospitality", name: "Yuki Restaurant, Duluth GA", image: hosp7, folderName: "Yuki_Restaurant_Duluth_GA" },
+            { id: "h8", category: "Hospitality", name: "Anjoo Korean BarBQ, Suwanee GA", image: hosp8, folderName: "Anjoo_Korean_Barbq_Suwanee_GA" }
+        ].map(p => ({ ...p, details: getProjectDetails(p.folderName) }))
     },
     {
         id: "residential",

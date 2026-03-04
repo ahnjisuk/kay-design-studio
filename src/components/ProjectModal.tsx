@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, MapPin, Calendar, Layout } from "lucide-react";
+import { X, MapPin, Calendar } from "lucide-react";
 
 interface Project {
     id: string;
@@ -18,6 +19,11 @@ interface ProjectModalProps {
 }
 
 export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+    const [currentImg, setCurrentImg] = useState(0);
+    const allImages = project.details && project.details.length > 0
+        ? [project.image, ...project.details]
+        : [project.image];
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -38,7 +44,7 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: 10 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full h-full bg-white shadow-2xl overflow-y-auto no-scrollbar flex flex-col md:flex-row"
+                className="relative w-full h-full bg-white shadow-2xl overflow-hidden flex flex-col md:flex-row"
             >
                 {/* Close Button */}
                 <button
@@ -48,21 +54,43 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                     <X className="w-6 h-6 stroke-1" />
                 </button>
 
-                {/* Left Side: Large Hero Image */}
-                <div className="w-full md:w-2/3 h-[50vh] md:h-full relative overflow-hidden group">
-                    <motion.img
-                        initial={{ scale: 1.1 }}
-                        animate={{ scale: 1 }}
-                        transition={{ duration: 1.5 }}
-                        src={project.image}
-                        alt={project.name}
-                        className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000"
-                    />
-                    <div className="absolute inset-0 bg-black/10" />
+                {/* Left Side: Image Gallery */}
+                <div className="w-full md:w-3/4 h-[60vh] md:h-full relative overflow-hidden bg-stone-100 group">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentImg}
+                            initial={{ opacity: 0, scale: 1.05 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                            src={allImages[currentImg]}
+                            alt={`${project.name} ${currentImg + 1}`}
+                            className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
+                        />
+                    </AnimatePresence>
+
+                    {/* Gallery Navigation */}
+                    {allImages.length > 1 && (
+                        <>
+                            <div className="absolute bottom-12 left-12 flex gap-4 z-20">
+                                {allImages.map((_, i) => (
+                                    <button
+                                        key={i}
+                                        onClick={() => setCurrentImg(i)}
+                                        className={`w-12 h-[2px] transition-all duration-500 ${i === currentImg ? "bg-black w-24" : "bg-black/20 hover:bg-black/40"
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                            <div className="absolute bottom-12 right-12 text-[10px] uppercase tracking-widest font-medium text-black/40 z-20">
+                                {currentImg + 1} / {allImages.length}
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Right Side: Project Info */}
-                <div className="w-full md:w-1/3 p-12 md:p-20 flex flex-col justify-between bg-stone-50">
+                <div className="w-full md:w-1/4 p-12 md:p-16 flex flex-col justify-between bg-white border-l border-black/5 overflow-y-auto no-scrollbar">
                     <div>
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
@@ -80,7 +108,7 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
-                            className="text-4xl md:text-6xl font-extralight tracking-tighter leading-none mb-12 uppercase italic"
+                            className="text-4xl md:text-5xl font-extralight tracking-tighter leading-none mb-12 uppercase italic"
                         >
                             {project.name}
                         </motion.h2>
@@ -89,9 +117,9 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.4 }}
-                            className="space-y-8"
+                            className="space-y-12"
                         >
-                            <div className="grid grid-cols-2 gap-8 py-8 border-y border-black/5">
+                            <div className="space-y-8 py-8 border-y border-black/5">
                                 <div className="space-y-2">
                                     <div className="flex items-center gap-2 text-black/40">
                                         <MapPin className="w-3 h-3" />
@@ -107,16 +135,6 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                                     <p className="text-xs font-light">{project.year || "2024"}</p>
                                 </div>
                             </div>
-
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 text-black/40">
-                                    <Layout className="w-3 h-3" />
-                                    <span className="text-[9px] uppercase tracking-widest font-medium">Philosophy</span>
-                                </div>
-                                <p className="text-sm font-light leading-relaxed text-black/70">
-                                    {project.description || "Every space is a dialogue between human experience and architectural form. This project represents our commitment to precision, material integrity, and the elevation of the everyday through thoughtful design."}
-                                </p>
-                            </div>
                         </motion.div>
                     </div>
 
@@ -126,10 +144,9 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                         transition={{ delay: 0.5 }}
                         className="mt-12"
                     >
-                        <button className="flex items-center gap-6 group">
-                            <span className="text-[10px] uppercase tracking-widest font-medium group-hover:mr-4 transition-all">View Full Case Study</span>
-                            <ArrowRight className="w-4 h-4 stroke-1 group-hover:scale-x-150 origin-left transition-transform" />
-                        </button>
+                        <p className="text-[10px] uppercase tracking-widest font-medium text-black/30 mb-8 italic">
+                            Architecture / Interior / Design
+                        </p>
                     </motion.div>
                 </div>
             </motion.div>
