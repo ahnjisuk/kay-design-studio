@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, MapPin, Calendar } from "lucide-react";
+import { X, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface Project {
     id: string;
@@ -15,14 +15,35 @@ interface Project {
 
 interface ProjectModalProps {
     project: Project;
+    allProjects: Project[];
     onClose: () => void;
 }
 
-export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
+export const ProjectModal = ({ project: initialProject, allProjects, onClose }: ProjectModalProps) => {
+    const [currentProject, setCurrentProject] = useState(initialProject);
     const [currentImg, setCurrentImg] = useState(0);
-    const allImages = project.details && project.details.length > 0
-        ? [project.image, ...project.details]
-        : [project.image];
+
+    const allImages = currentProject.details && currentProject.details.length > 0
+        ? [currentProject.image, ...currentProject.details]
+        : [currentProject.image];
+
+    const next = () => setCurrentImg((p) => (p + 1) % allImages.length);
+    const prev = () => setCurrentImg((p) => (p - 1 + allImages.length) % allImages.length);
+
+    // Reset image index when project changes
+    useEffect(() => {
+        setCurrentImg(0);
+    }, [currentProject.id]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowRight") next();
+            if (e.key === "ArrowLeft") prev();
+            if (e.key === "Escape") onClose();
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [allImages.length, onClose]);
 
     return (
         <motion.div
@@ -34,7 +55,7 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
         >
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-white/95 backdrop-blur-xl cursor-crosshair"
+                className="absolute inset-0 bg-white/98 cursor-crosshair"
                 onClick={onClose}
             />
 
@@ -44,110 +65,128 @@ export const ProjectModal = ({ project, onClose }: ProjectModalProps) => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.98, y: 10 }}
                 transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                className="relative w-full h-full bg-white shadow-2xl overflow-hidden flex flex-col md:flex-row"
+                className="relative w-full h-full bg-white shadow-2xl overflow-hidden flex flex-col"
             >
-                {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute top-8 right-8 z-50 p-4 bg-black text-white hover:bg-black/80 transition-colors shadow-lg"
-                >
-                    <X className="w-6 h-6 stroke-1" />
-                </button>
+                {/* Top Navigation: Project Names List */}
+                <div className="w-full bg-white border-b border-black/5 px-8 pt-10 pb-6 flex items-center justify-between">
+                    <div className="flex-1 overflow-x-auto no-scrollbar">
+                        <div className="flex items-center gap-12 min-w-max pr-12">
+                            {allProjects.map((p) => (
+                                <button
+                                    key={p.id}
+                                    onClick={() => setCurrentProject(p)}
+                                    className={`text-[11px] uppercase tracking-[0.2em] transition-all whitespace-nowrap ${p.id === currentProject.id
+                                        ? "text-black font-semibold border-b border-black pb-1"
+                                        : "text-black/30 hover:text-black/60"
+                                        }`}
+                                >
+                                    {p.name}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
 
-                {/* Left Side: Image Gallery */}
-                <div className="w-full md:w-3/4 h-[60vh] md:h-full relative overflow-hidden bg-stone-100 group">
-                    <AnimatePresence mode="wait">
-                        <motion.img
-                            key={currentImg}
-                            initial={{ opacity: 0, scale: 1.05 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                            src={allImages[currentImg]}
-                            alt={`${project.name} ${currentImg + 1}`}
-                            className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
-                        />
-                    </AnimatePresence>
+                    <button
+                        onClick={onClose}
+                        className="p-2 ml-8 hover:bg-stone-100 transition-colors"
+                    >
+                        <X className="w-5 h-5 stroke-1" />
+                    </button>
+                </div>
 
-                    {/* Gallery Navigation */}
-                    {allImages.length > 1 && (
-                        <>
-                            <div className="absolute bottom-12 left-12 flex gap-4 z-20">
+                {/* Main Content Area */}
+                <div className="flex-grow relative flex flex-col md:flex-row">
+                    {/* Left/Center Side: Image Gallery */}
+                    <div className="flex-grow h-full relative overflow-hidden bg-stone-50 group">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={`${currentProject.id}-${currentImg}`}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="absolute inset-0 flex items-center justify-center overflow-hidden bg-black"
+                            >
+                                {/* Blurred Background for vertical/mismatched images */}
+                                <img
+                                    src={allImages[currentImg]}
+                                    alt=""
+                                    className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110"
+                                />
+
+                                {/* Main Image */}
+                                <motion.img
+                                    initial={{ opacity: 0, scale: 0.98 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 1.02 }}
+                                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                    src={allImages[currentImg]}
+                                    alt={`${currentProject.name} ${currentImg + 1}`}
+                                    className="relative z-10 w-full h-full object-contain shadow-2xl"
+                                />
+                            </motion.div>
+                        </AnimatePresence>
+
+                        {/* Navigation Arrows */}
+                        {allImages.length > 1 && (
+                            <div className="absolute inset-0 flex items-center justify-between px-8 z-30 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none text-white">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); prev(); }}
+                                    className="p-4 bg-black/10 hover:bg-black/60 backdrop-blur-sm transition-all pointer-events-auto rounded-full"
+                                >
+                                    <ChevronLeft className="w-6 h-6" />
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); next(); }}
+                                    className="p-4 bg-black/10 hover:bg-black/60 backdrop-blur-sm transition-all pointer-events-auto rounded-full"
+                                >
+                                    <ChevronRight className="w-6 h-6" />
+                                </button>
+                            </div>
+                        )}
+
+                        {/* Gallery Pagination Bars - Shifted to top for visibility */}
+                        {allImages.length > 1 && (
+                            <div className="absolute top-8 left-8 right-8 flex gap-1 z-20">
                                 {allImages.map((_, i) => (
                                     <button
                                         key={i}
                                         onClick={() => setCurrentImg(i)}
-                                        className={`w-12 h-[2px] transition-all duration-500 ${i === currentImg ? "bg-black w-24" : "bg-black/20 hover:bg-black/40"
+                                        className={`h-[2px] flex-1 transition-all duration-500 ${i === currentImg ? "bg-black" : "bg-black/10 hover:bg-black/20"
                                             }`}
                                     />
                                 ))}
                             </div>
-                            <div className="absolute bottom-12 right-12 text-[10px] uppercase tracking-widest font-medium text-black/40 z-20">
-                                {currentImg + 1} / {allImages.length}
-                            </div>
-                        </>
-                    )}
-                </div>
+                        )}
 
-                {/* Right Side: Project Info */}
-                <div className="w-full md:w-1/4 p-12 md:p-16 flex flex-col justify-between bg-white border-l border-black/5 overflow-y-auto no-scrollbar">
-                    <div>
-                        <motion.div
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 0.2 }}
-                            className="flex items-center gap-4 mb-12"
-                        >
-                            <span className="h-[1px] w-8 bg-black/20" />
-                            <span className="text-[10px] uppercase tracking-[0.3em] font-medium text-black/40">
-                                {project.category}
-                            </span>
-                        </motion.div>
-
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-4xl md:text-5xl font-extralight tracking-tighter leading-none mb-12 uppercase italic"
-                        >
-                            {project.name}
-                        </motion.h2>
-
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.4 }}
-                            className="space-y-12"
-                        >
-                            <div className="space-y-8 py-8 border-y border-black/5">
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2 text-black/40">
-                                        <MapPin className="w-3 h-3" />
-                                        <span className="text-[9px] uppercase tracking-widest font-medium">Location</span>
-                                    </div>
-                                    <p className="text-xs font-light">{project.location || "Confidential"}</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <div className="flex items-center gap-2 text-black/40">
-                                        <Calendar className="w-3 h-3" />
-                                        <span className="text-[9px] uppercase tracking-widest font-medium">Date</span>
-                                    </div>
-                                    <p className="text-xs font-light">{project.year || "2024"}</p>
-                                </div>
-                            </div>
-                        </motion.div>
+                        {/* Counters */}
+                        <div className="absolute bottom-8 right-8 text-[10px] uppercase tracking-widest font-medium text-black/40 z-20">
+                            PHOTO {currentImg + 1} / {allImages.length}
+                        </div>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="mt-12"
-                    >
-                        <p className="text-[10px] uppercase tracking-widest font-medium text-black/30 mb-8 italic">
-                            Architecture / Interior / Design
-                        </p>
-                    </motion.div>
+                    {/* Small Bottom/Right Info (Compact fallback) */}
+                    <div className="p-8 md:p-12 w-full md:w-80 bg-white border-l border-black/5 flex flex-col justify-between">
+                        <div>
+                            <p className="text-[10px] uppercase tracking-[0.2em] font-medium text-black/40 mb-4">{currentProject.category}</p>
+                            <h2 className="text-2xl font-light tracking-tight leading-tight uppercase italic mb-8">
+                                {currentProject.name}
+                            </h2>
+                            <p className="text-xs font-light text-black/60 leading-relaxed italic">
+                                Architecture / Interior / Design
+                            </p>
+                        </div>
+
+                        {/* Pagination info for mobile or small screens */}
+                        <div className="mt-8 pt-8 border-t border-black/5">
+                            <button
+                                onClick={onClose}
+                                className="text-[10px] uppercase tracking-widest font-medium hover:italic transition-all"
+                            >
+                                [ Back to Studio ]
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </motion.div>
         </motion.div>
