@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Search } from "lucide-react";
-import { Link } from "react-router-dom";
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -36,15 +35,24 @@ export const Navbar = () => {
                     }`}
             >
                 <div className="flex items-center gap-12">
-                    <button
+                    <div
+                        role="button"
+                        tabIndex={0}
                         onClick={() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                             setMenuOpen(false);
+                            console.log("Logo clicked - scrolling to top");
                         }}
-                        className="text-xl font-light tracking-architectural uppercase cursor-pointer hover:opacity-70 transition-opacity"
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                setMenuOpen(false);
+                            }
+                        }}
+                        className="text-xl font-light tracking-architectural uppercase cursor-pointer hover:opacity-70 transition-opacity select-none"
                     >
                         Kay Design Studio
-                    </button>
+                    </div>
                     <nav className="hidden lg:flex items-center gap-8">
                         {navLinks.slice(0, 4).map((link) => (
                             <div key={link.name} className="relative group p-2 -m-2">
