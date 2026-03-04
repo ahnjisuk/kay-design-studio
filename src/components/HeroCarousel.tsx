@@ -31,7 +31,7 @@ export const HeroCarousel = () => {
     const next = useCallback(() => setCurrent((p) => (p + 1) % slides.length), []);
 
     useEffect(() => {
-        const timer = setInterval(next, 4500);
+        const timer = setInterval(next, 4000);
         return () => clearInterval(timer);
     }, [next]);
 
@@ -97,7 +97,7 @@ export const HeroCarousel = () => {
                             <motion.div
                                 initial={{ x: "-100%" }}
                                 animate={{ x: "0%" }}
-                                transition={{ duration: 4.5, ease: "linear" }}
+                                transition={{ duration: 4, ease: "linear" }}
                                 key={current}
                                 className="absolute inset-0 bg-white/40"
                             />

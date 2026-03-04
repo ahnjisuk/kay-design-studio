@@ -48,9 +48,12 @@ interface Project {
 
 const getProjectDetails = (folderName?: string): string[] => {
     if (!folderName) return [];
-    return Object.entries(detailImages)
-        .filter(([path]) => path.includes(`/hospital/${folderName}/`))
+    const details = Object.entries(detailImages)
+        .filter(([path]) => path.toLowerCase().includes(`/hospital/${folderName.toLowerCase()}/`))
         .map(([_, url]) => url as string);
+
+    console.log(`Loading details for ${folderName}:`, details);
+    return details;
 };
 
 const categories: { id: string; title: string; description: string; topImage?: string; projects: Project[] }[] = [
