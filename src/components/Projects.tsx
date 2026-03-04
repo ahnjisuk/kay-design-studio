@@ -32,7 +32,7 @@ import ind3 from "../assets/projects/industrial/Image-empty-state (2).avif";
 import ind4 from "../assets/projects/industrial/Image-empty-state (3).avif";
 import ind5 from "../assets/projects/industrial/Image-empty-state (4).avif";
 
-const detailImages = import.meta.glob<string>('../assets/projects/hospital/**/*.png', { eager: true, as: 'url' });
+const detailImages = import.meta.glob<string>('../assets/projects/hospital/**/*.{png,jpg,jpeg,avif,webp}', { eager: true, as: 'url' });
 
 interface Project {
     id: string;
