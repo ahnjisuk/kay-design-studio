@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Search } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
@@ -35,9 +36,16 @@ export const Navbar = () => {
                     }`}
             >
                 <div className="flex items-center gap-12">
-                    <a href="#top" className="text-xl font-light tracking-architectural uppercase">
+                    <Link
+                        to="/"
+                        onClick={() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            setMenuOpen(false);
+                        }}
+                        className="text-xl font-light tracking-architectural uppercase"
+                    >
                         Kay Design Studio
-                    </a>
+                    </Link>
                     <nav className="hidden lg:flex items-center gap-8">
                         {navLinks.slice(0, 4).map((link) => (
                             <div key={link.name} className="relative group p-2 -m-2">
