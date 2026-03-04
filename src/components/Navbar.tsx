@@ -35,7 +35,7 @@ export const Navbar = () => {
                     }`}
             >
                 <div className="flex items-center gap-12">
-                    <a href="/" className="text-xl font-light tracking-architectural uppercase">
+                    <a href="#top" className="text-xl font-light tracking-architectural uppercase">
                         Kay Design Studio
                     </a>
                     <nav className="hidden lg:flex items-center gap-8">

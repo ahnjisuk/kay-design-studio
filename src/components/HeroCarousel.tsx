@@ -36,7 +36,7 @@ export const HeroCarousel = () => {
     }, [next]);
 
     return (
-        <section className="relative h-screen w-full bg-black overflow-hidden select-none">
+        <section id="top" className="relative h-screen w-full bg-black overflow-hidden select-none">
             <AnimatePresence>
                 <motion.div
                     key={current}
