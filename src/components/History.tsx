@@ -54,10 +54,10 @@ export const History = () => {
     const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     return (
-        <section id="history" className="py-48 px-8 md:px-24 bg-white border-b border-black/5">
+        <section id="history" className="py-32 px-8 md:px-24 bg-white border-b border-black/5">
             <div className="max-w-screen-2xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-baseline mb-32 gap-12">
-                    <p className="text-architectural text-black/30">The Journey</p>
+                <div className="flex flex-col md:flex-row justify-between items-baseline mb-16 gap-12">
+                    <p className="text-architectural text-black/80 text-lg uppercase tracking-widest">The Journey</p>
                     <h3 className="text-5xl md:text-8xl font-extralight tracking-tighter lowercase max-w-2xl">
                         a legacy of <span className="italic">architectural evolution.</span>
                     </h3>
@@ -73,7 +73,7 @@ export const History = () => {
                         className="absolute left-[7px] top-0 w-[1px] bg-black md:left-1/2 origin-top"
                     />
 
-                    <div className="space-y-32 py-12">
+                    <div className="space-y-20 py-12">
                         {milestones.map((milestone, i) => (
                             <motion.div
                                 key={milestone.year}
@@ -96,7 +96,7 @@ export const History = () => {
                                 <div className="w-full md:w-1/2 md:px-12 ml-8 md:ml-0">
                                     <div className={`flex flex-col ${i % 2 === 0 ? "md:items-start" : "md:items-end"} gap-4`}>
                                         <motion.span
-                                            className="text-architectural text-black/30 text-sm font-mono tracking-[0.2em]"
+                                            className="text-architectural text-black/80 text-lg font-mono tracking-[0.2em]"
                                             whileHover={{ scale: 1.05, color: "#000" }}
                                         >
                                             {milestone.year}

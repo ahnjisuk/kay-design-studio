@@ -46,7 +46,9 @@
     }
 
     .text-hero-heading {
-        @apply text-6xl md:text-8xl lg:text-[10rem] font-extralight leading-[0.9] tracking-tighter font-display;
+        /* Fluid typography: min 3.5rem (56px) to max 10rem (160px) based on viewport width */
+        font-size: clamp(3.5rem, 10vw + 1rem, 10rem);
+        @apply font-extralight leading-[0.9] tracking-tighter font-display;
     }
 
     .glass-light {

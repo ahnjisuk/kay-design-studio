@@ -5,6 +5,7 @@ import path from "path";
 export default defineConfig({
     base: "/kay-design-studio/",
     plugins: [react()],
+    assetsInclude: ['**/*.tif', '**/*.TIF', '**/*.tiff', '**/*.TIFF'],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),

@@ -75,9 +75,9 @@ export const ProjectModal = ({ project: initialProject, allProjects, onClose }: 
                                 <button
                                     key={p.id}
                                     onClick={() => setCurrentProject(p)}
-                                    className={`text-[11px] uppercase tracking-[0.2em] transition-all whitespace-nowrap ${p.id === currentProject.id
+                                    className={`text-sm tracking-widest uppercase transition-all whitespace-nowrap ${p.id === currentProject.id
                                         ? "text-black font-semibold border-b border-black pb-1"
-                                        : "text-black/30 hover:text-black/60"
+                                        : "text-black/60 hover:text-black font-medium"
                                         }`}
                                 >
                                     {p.name}
@@ -168,7 +168,7 @@ export const ProjectModal = ({ project: initialProject, allProjects, onClose }: 
                     {/* Small Bottom/Right Info (Compact fallback) */}
                     <div className="p-8 md:p-12 w-full md:w-80 bg-white border-l border-black/5 flex flex-col justify-between">
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.2em] font-medium text-black/40 mb-4">{currentProject.category}</p>
+                            <p className="text-sm md:text-base uppercase tracking-widest font-semibold text-black/80 mb-4">{currentProject.category}</p>
                             <h2 className="text-2xl font-light tracking-tight leading-tight uppercase italic mb-8">
                                 {currentProject.name}
                             </h2>

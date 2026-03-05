@@ -63,9 +63,9 @@ export const HeroCarousel = () => {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 1.2, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute bottom-24 left-8 md:left-24 right-8 md:right-24 pointer-events-auto"
+                    className="absolute bottom-12 md:bottom-24 left-8 md:left-24 right-8 md:right-24 pointer-events-auto max-w-[90vw] lg:max-w-7xl"
                 >
-                    <h1 className="text-hero-heading text-white mb-10 whitespace-pre-line lowercase leading-none tracking-tighter">
+                    <h1 className="text-hero-heading text-white mb-6 md:mb-10 whitespace-pre-line lowercase leading-none tracking-tighter">
                         {["Let's", "Build", "Together."].map((line, i) => (
                             <span key={i} className="block overflow-hidden pb-4">
                                 <motion.span

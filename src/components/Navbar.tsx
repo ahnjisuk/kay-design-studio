@@ -13,18 +13,17 @@ export const Navbar = () => {
     }, []);
 
     const navLinks = [
+        { name: "About", scroll: "#about" },
+        { name: "Services", scroll: "#services" },
         {
             name: "Projects",
             scroll: "#projects",
             subLinks: [
-                { name: "Hospitality", scroll: "#hospitality" },
-                { name: "Residential", scroll: "#residential" },
-                { name: "Industrial", scroll: "#industrial" },
+                { name: "Hospitality", scroll: "#hospitality", desc: "EXPERIENCE THE ART OF LUXURY" },
+                { name: "Residential", scroll: "#residential", desc: "BESPOKE CABINET TAILORED TO YOUR LIFESTYLE" },
+                { name: "Industrial", scroll: "#industrial", desc: "crafting industry excellence" },
             ]
         },
-        { name: "Services", scroll: "#services" },
-        { name: "About", scroll: "#about" },
-        { name: "Clients", scroll: "#clients" },
         { name: "Contact", scroll: "#contact" },
     ];
 
@@ -41,23 +40,18 @@ export const Navbar = () => {
                         onClick={() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                             setMenuOpen(false);
-                            console.log("Logo clicked - scrolling to top");
-                        }}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' || e.key === ' ') {
-                                window.scrollTo({ top: 0, behavior: 'smooth' });
-                                setMenuOpen(false);
-                            }
                         }}
                         className="text-xl font-light tracking-architectural uppercase cursor-pointer hover:opacity-70 transition-opacity select-none"
                     >
                         Kay Design Studio —
                     </div>
                     <nav className="hidden lg:flex items-center gap-8">
-                        {navLinks.slice(0, 4).map((link) => (
+                        {navLinks.map((link) => (
                             <div key={link.name} className="relative group p-2 -m-2">
                                 {link.subLinks ? (
-                                    <span className="text-[10px] uppercase tracking-architectural cursor-default opacity-100 italic transition-all">
+                                    <span
+                                        className="text-[10px] uppercase tracking-architectural cursor-default opacity-100 italic transition-all"
+                                    >
                                         {link.name}
                                     </span>
                                 ) : (
@@ -69,20 +63,33 @@ export const Navbar = () => {
                                     </a>
                                 )}
 
-                                {/* Dropdown Menu for Sub-links */}
+                                {/* Dropdown Menu (Glassmorphism) */}
                                 {link.subLinks && (
-                                    <div className="absolute top-full left-0 pt-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
-                                        <div className="bg-white/95 backdrop-blur-md text-black px-6 py-5 flex flex-col gap-4 min-w-[180px] shadow-sm border border-black/5">
-                                            {link.subLinks.map(sub => (
-                                                <a
-                                                    key={sub.name}
-                                                    href={sub.scroll}
-                                                    className="text-[10px] uppercase font-medium hover:italic hover:text-black/50 transition-all flex items-center justify-between group/sub"
-                                                >
-                                                    {sub.name}
-                                                    <span className="w-0 h-[1px] bg-black/30 group-hover/sub:w-4 transition-all duration-300" />
-                                                </a>
-                                            ))}
+                                    <div className="absolute top-full left-0 pt-6 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-700 ease-out transform translate-y-4 group-hover:translate-y-0 origin-top">
+                                        <div className="bg-white/95 backdrop-blur-2xl text-black px-10 py-8 flex flex-col gap-6 min-w-[550px] shadow-[0_8px_32px_rgba(0,0,0,0.05)] border border-white/50 rounded-lg overflow-hidden relative">
+                                            <div className="absolute inset-0 bg-gradient-to-b from-white/40 to-transparent pointer-events-none" />
+
+                                            <div className="relative z-10 flex flex-col gap-6">
+                                                {link.subLinks.map(sub => (
+                                                    <a
+                                                        key={sub.name}
+                                                        href={sub.scroll}
+                                                        className="group/sub flex items-center justify-between transition-all"
+                                                    >
+                                                        <div className="flex items-baseline gap-4 w-full">
+                                                            <span className="text-base font-light uppercase tracking-widest group-hover/sub:italic group-hover/sub:text-black/60 transition-all whitespace-nowrap">
+                                                                {sub.name}
+                                                            </span>
+                                                            <div className="flex flex-row items-center gap-3 flex-grow opacity-60 group-hover/sub:opacity-100 transition-all overflow-hidden border-b border-transparent group-hover/sub:border-black/10 pb-1">
+                                                                <span className="w-6 h-[1px] bg-black/20 group-hover/sub:w-12 group-hover/sub:bg-black/50 transition-all duration-700 hidden sm:block" />
+                                                                <span className="text-[9px] sm:text-[10px] text-black/50 group-hover/sub:text-black/80 uppercase tracking-[0.2em] font-mono text-right whitespace-nowrap transition-colors">
+                                                                    {sub.desc}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
                                 )}
@@ -124,7 +131,9 @@ export const Navbar = () => {
                                     className="group relative flex flex-col items-start"
                                 >
                                     {link.subLinks ? (
-                                        <span className="text-5xl md:text-7xl font-extralight tracking-tighter transition-all inline-block lowercase cursor-default italic">
+                                        <span
+                                            className="text-5xl md:text-7xl font-extralight tracking-tighter transition-all inline-block lowercase italic cursor-default"
+                                        >
                                             {link.name}
                                         </span>
                                     ) : (
@@ -137,32 +146,19 @@ export const Navbar = () => {
                                         </a>
                                     )}
 
-                                    {/* SubLinks Hierarchy - Fade & Slide in to the Right with Framer Motion */}
                                     {link.subLinks && (
-                                        <motion.div
-                                            className="md:absolute md:left-full md:top-1/2 md:-translate-y-1/2 md:ml-12 mt-4 md:mt-0 flex flex-col gap-2 md:gap-4 pointer-events-none group-hover:pointer-events-auto z-10"
-                                            initial={{ opacity: 0, x: -30 }}
-                                            whileHover={{ opacity: 1, x: 0 }} /* Note: Using tailwind group-hover logic is easier with CSS but let's stick to consistent implementation */
-                                            variants={{
-                                                hidden: { opacity: 0, x: -30 },
-                                                visible: { opacity: 1, x: 0 }
-                                            }}
-                                            animate="visible" /* This is slightly tricky with group-hover, let's use CSS transitions for the hover trigger but keep it elegant */
-                                            transition={{ ease: "easeOut", duration: 0.8 }}
-                                        >
-                                            <div className="flex flex-col gap-2 md:gap-4 opacity-0 group-hover:opacity-100 translate-x-[-30px] group-hover:translate-x-0 transition-all duration-[800ms] ease-out">
-                                                {link.subLinks.map((sub) => (
-                                                    <a
-                                                        key={sub.name}
-                                                        href={sub.scroll}
-                                                        onClick={() => setMenuOpen(false)}
-                                                        className="text-2xl md:text-4xl font-extralight text-black/30 hover:text-black hover:italic transition-all lowercase whitespace-nowrap"
-                                                    >
-                                                        {sub.name}
-                                                    </a>
-                                                ))}
-                                            </div>
-                                        </motion.div>
+                                        <div className="flex flex-col gap-2 md:gap-4 opacity-0 group-hover:opacity-100 translate-x-[-30px] group-hover:translate-x-0 transition-all duration-[800ms] ease-out mt-4 md:mt-0 md:absolute md:left-full md:top-1/2 md:-translate-y-1/2 md:ml-12 pointer-events-none group-hover:pointer-events-auto">
+                                            {link.subLinks.map((sub) => (
+                                                <a
+                                                    key={sub.name}
+                                                    href={sub.scroll}
+                                                    onClick={() => setMenuOpen(false)}
+                                                    className="text-2xl md:text-3xl font-extralight text-black/30 hover:text-black hover:italic transition-all lowercase whitespace-nowrap"
+                                                >
+                                                    {sub.name}
+                                                </a>
+                                            ))}
+                                        </div>
                                     )}
                                 </motion.div>
                             ))}
